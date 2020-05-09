@@ -1,24 +1,28 @@
 import "./Ownable.sol";
 pragma solidity 0.5.12;
 
-contract RealcoinShitcoin{
+contract RealcoinShitcoin is Ownable{
 
   uint public balance;
 
-  function placeBet(string memory bet, uint betAmount) public payable returns(uint amount){
-    require(balance >= betAmount, "Not enough ether in contract to allow the bet.");
+  constructor() public payable {
+    require(msg.value >= 1 ether, "need at least 1 ether to init the contract with");
+    balance = msg.value;
+  }
+
+  function placeBet(string memory bet) public payable returns(uint amount){
+    require(balance >= msg.value, "Not enough ether in contract to allow the bet.");
     uint result = randomize(2);
 
     if((compareStrings(bet, "Realcoin") && result == 0) || (compareStrings(bet, "Shitcoin") && result == 1))
     {
-
-      balance = balance - betAmount;
+      balance = balance - msg.value;
       //send 2x bet amount (bet + win) to sender
-      msg.sender.transfer(betAmount * 2);
+      msg.sender.transfer(msg.value * 2);
 
-      return (betAmount);
+      return (msg.value);
     }
-    balance = balance + betAmount;
+    balance = balance + msg.value;
     return 0;
   }
 

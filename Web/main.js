@@ -4,7 +4,7 @@ var contractInstance;
 $(document).ready(function() {
     //asks user's metamask to connect
     window.ethereum.enable().then(function(accounts){
-    contractInstance = new web3.eth.Contract(abi, "0xFb541767135b04F005C3a5Dc4AC266d3520AB8f5", {from: accounts[0]});
+    contractInstance = new web3.eth.Contract(abi, "0xB7765E93c8eF557a58199f5BED77AE089117bFec", {from: accounts[0]});
     console.log(contractInstance);
     });
     $("#shitcoin_button").click(placeBet);
@@ -24,8 +24,9 @@ function placeBet(){
     {
       $("#result_output").text("You won " + res.amount + " ether!");
     }
-    if(res.shitcoin === true)
-
+    else {
+      $("#result_output").text("You are terrible at this game and lost " + res.amount + " ether!");
+    }
   })
   .on("transactionHash", function(hash){
     console.log(hash);
