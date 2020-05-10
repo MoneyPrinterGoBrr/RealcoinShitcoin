@@ -4,26 +4,36 @@ pragma solidity 0.5.12;
 contract RealcoinShitcoin is Ownable{
 
   uint public balance;
+  event userWon(string bet, uint toTransfer, uint modulus);
+  event userLost(string bet, uint toTransfer, uint modulus);
 
   constructor() public payable {
     require(msg.value >= 1 ether, "need at least 1 ether to init the contract with");
     balance = msg.value;
   }
 
-  function placeBet(string memory bet) public payable returns(uint amount){
+  function placeBet(string memory bet) public payable{
     require(balance >= msg.value, "Not enough ether in contract to allow the bet.");
     uint result = randomize(2);
+    uint toTransfer;
 
     if((compareStrings(bet, "Realcoin") && result == 0) || (compareStrings(bet, "Shitcoin") && result == 1))
     {
-      balance = balance - msg.value;
+      toTransfer = msg.value * 2;
+      balance = balance - toTransfer;
       //send 2x bet amount (bet + win) to sender
-      msg.sender.transfer(msg.value * 2);
-
-      return (msg.value);
+      msg.sender.transfer(toTransfer);
+      emit userWon(bet, toTransfer, result);
+      //return (toTransfer);
     }
-    balance = balance + msg.value;
-    return 0;
+    else
+    {
+      toTransfer = 0;
+      balance = balance + toTransfer;
+      emit userLost(bet, toTransfer, result);
+      //return 0;
+    }
+
   }
 
 

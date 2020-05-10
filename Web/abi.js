@@ -45,13 +45,7 @@ var abi = [
       }
     ],
     "name": "placeBet",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [],
     "payable": true,
     "stateMutability": "payable",
     "type": "function"
