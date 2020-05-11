@@ -6,6 +6,37 @@ var abi = [
     "type": "constructor"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "id",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "bet",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "outcome",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountWon",
+        "type": "uint256"
+      }
+    ],
+    "name": "betResult",
+    "type": "event"
+  },
+  {
     "constant": true,
     "inputs": [],
     "name": "balance",
@@ -40,8 +71,13 @@ var abi = [
     "inputs": [
       {
         "internalType": "string",
-        "name": "bet",
+        "name": "id",
         "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "bet",
+        "type": "uint256"
       }
     ],
     "name": "placeBet",
