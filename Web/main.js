@@ -14,7 +14,8 @@ $(document).ready(function() {
 
 async function placeBet(bet){
   $("#result_output").text("");
-  $("#img_output").hidden = true;
+  $("#div_shitcoin").css({display:"none"});
+  $("#div_realcoin").css({display:"none"});
 
   var amountInput =$("#amount_input").val();
   console.log("betAmount: " +  amountInput);
@@ -34,19 +35,17 @@ async function placeBet(bet){
             async (err, events) => {
                 console.log(events[0].returnValues);
                 if(events[0].returnValues.amountWon > 0){
-                  $("#result_output").text("You won " + web3.utils.fromWei(events[0].returnValues.amountWon, 'ether') + " ether!");
+                  $("#result_output").text("You won " + amountInput + " ether!");
                 }
                 else {
                   $("#result_output").text("You are terrible at this game and lost " + amountInput + " ether!");
                 }
 
                 if(events[0].returnValues.outcome == 0){
-                  $("#img_output").hidden = false;
-                  $("#img_output").source = "./shitcoin.jpg";
+                  $("#div_realcoin").css({display:"block"});
                 }
                 else{
-                  $("#img_output").hidden = false;
-                  $("#img_output").source = "./realcoin.jpg";
+                  $("#div_shitcoin").css({display:"block"});
                 }
             });
         }catch(err){
@@ -55,46 +54,6 @@ async function placeBet(bet){
     }catch(err){
         console.log(err)
     }
-
-  /*
-  .then(function(result){
-    console.log(result);
-    for (var i = 0; i < result.events.length; i++) {
-    var event = result.events[i];
-    console.log(event);
-
-    if (log.event == "Transfer") {
-      // We found the event!
-      break;
-    }
-
-  }
-  });
-/*
-  .on("logs", function(logs){
-    console.log(logs);
-  })
-  .on("receipt", function(receipt){
-    console.log(receipt);
-  });
-*/
-  //console.log("result: " + result);
-  //console.log("resultLogs0: " + result.logs[0]);
-  /*
-  contractInstance.methods.placeBet(bet.data.key).send(config)
-  .then(function(result){
-    console.log("result: " + result);
-    console.log("resultLogs0: " + result.logs[0]);
-
-    if(amount > 0)
-    {
-      $("#result_output").text("You won " + res[1] + " ether!");
-    }
-    else {
-      $("#result_output").text("You are terrible at this game and lost " + res[1] + " ether!");
-    }
-  });
-  */
 }
 
 function fetchAndDisplay(){
