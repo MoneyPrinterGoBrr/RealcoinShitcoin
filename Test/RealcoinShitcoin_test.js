@@ -7,12 +7,12 @@ contract("RealcoinShitcoin", accounts => {
 
   var instance;
   before(async function(){
-    instance = await RealcoinShitcoin.deployed({value: web3.utils.toWei("1", "ether"), from:accounts[0]});
+    instance = await RealcoinShitcoin.deployed({value: web3.utils.toWei("0.1", "ether"), from:accounts[0]});
   });
 
   it("should initialize with correct balance", async function(){
-    assert(await instance.balance() == web3.utils.toWei("1", "ether"), "Balance " + await instance.balance()
-    + " not equal to constructor deposit of " + web3.utils.toWei("1", "ether"));
+    assert(await instance.balance() == web3.utils.toWei("0.1", "ether"), "Balance " + await instance.balance()
+    + " not equal to constructor deposit of " + web3.utils.toWei("0.1", "ether"));
   });
 
   it("should have same internal balance as contract balance", async function(){
@@ -21,7 +21,8 @@ contract("RealcoinShitcoin", accounts => {
   });
 
   it("should require bet to be <= contract balance", async function(){
-    truffleAssert.reverts(instance.placeBet("Realcoin", {value:web3.utils.toWei("1.1", "ether")}));
+    var id = Math.random().toString(36);
+    truffleAssert.reverts(instance.placeBet(id, 0, {value:web3.utils.toWei("1.1", "ether")}));
   });
 
 /* Following test doesnt work. Need to calculate real cost of transaction  see: https://ethereum.stackexchange.com/questions/42950/how-to-get-the-transaction-cost-in-a-truffle-unit-test

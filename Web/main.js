@@ -4,7 +4,7 @@ var contractInstance;
 $(document).ready(function() {
     //asks user's metamask to connect
     window.ethereum.enable().then(function(accounts){
-    contractInstance = new web3.eth.Contract(abi, "0xf2e93fC226839004AFd919785Fc2340d53F4b754", {from: accounts[0]});
+    contractInstance = new web3.eth.Contract(abi, "0x7b2101e61D241d22239a56B84dE5cE0ee27c977c", {from: accounts[0]});
     console.log(contractInstance);
     });
     $("#realcoin_button").click({key:0}, placeBet);
@@ -28,25 +28,27 @@ async function placeBet(bet){
   var id = Math.random().toString(36);
   console.log(id);
   try {
+    $("#result_output").text("Sending transaction...");
     let res = await contractInstance.methods.placeBet(id, bet.data.key).send(config);
         try{
             console.log(res);
-            await contractInstance.getPastEvents(['betResult'], {id: id, fromBlock: 'latest', toBlock: 'latest'},
-            async (err, events) => {
-                console.log(events[0].returnValues);
-                if(events[0].returnValues.amountWon > 0){
-                  $("#result_output").text("You won " + amountInput + " ether!");
-                }
-                else {
-                  $("#result_output").text("You are terrible at this game and lost " + amountInput + " ether!");
-                }
+            $("#result_output").text("Waiting for result...");
+            //await contractInstance.getPastEvents(['betResult'], {id: id, fromBlock: 'latest', toBlock: 'latest'},
+            contractInstance.once('betResult', {filter: {id: id}, fromBlock: 0}, function(error, event){
+              console.log(event.returnValues);
+              if(event.returnValues.amountWon > 0){
+                $("#result_output").text("You won " + amountInput + " ether!");
+              }
+              else {
+                $("#result_output").text("You are terrible at this game and lost " + amountInput + " ether!");
+              }
 
-                if(events[0].returnValues.outcome == 0){
-                  $("#div_realcoin").css({display:"block"});
-                }
-                else{
-                  $("#div_shitcoin").css({display:"block"});
-                }
+              if(event.returnValues.outcome == 0){
+                $("#div_realcoin").css({display:"block"});
+              }
+              else{
+                $("#div_shitcoin").css({display:"block"});
+              }
             });
         }catch(err){
         console.log(err)
